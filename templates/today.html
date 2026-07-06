@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block content %}
+{% if story %}
+<section class="card serial-hero">
+  <div class="muted">Auto Serial · Day {{ story['day'] }}</div>
+  <h1>{{ story['title'] }}</h1>
+  <p>{{ story['subtitle'] }}</p>
+  <div class="grid four">
+    <div class="stat mini"><span>Theme</span><b class="small-stat">{{ story['theme'] or 'daily turn' }}</b></div>
+    <div class="stat mini"><span>Lead</span><b class="small-stat">{{ story['protagonist_name'] or 'M6 Town' }}</b></div>
+    <div class="stat mini"><span>Generated</span><b class="small-stat">{% if story['ai_generated'] %}local AI{% else %}rules{% endif %}</b></div>
+    <div class="stat mini"><span>World Day</span><b class="small-stat">Day {{ day }}</b></div>
+  </div>
+  <div class="actions inline-actions serial-actions">
+    {% if prev_story %}<a class="button ghost" href="/serial/{{ prev_story['day'] }}">← Day {{ prev_story['day'] }}</a>{% endif %}
+    {% if next_story %}<a class="button ghost" href="/serial/{{ next_story['day'] }}">Day {{ next_story['day'] }} →</a>{% endif %}
+    <form method="post" action="/serial/generate-today"><button class="secondary">Regenerate Today</button></form>
+    <form method="post" action="/simulate-day"><button>Advance Tomorrow</button></form>
+    <a class="button ghost" href="/serial">Chapter Index</a>
+  </div>
+</section>
+<section class="card reader-card"><pre class="story-text">{{ story['story_text'] }}</pre></section>
+{% if story['tomorrow_hook'] %}<section class="card director-card"><h2>Tomorrow’s Hook</h2><p>{{ story['tomorrow_hook'] }}</p></section>{% endif %}
+{% if support_people %}<section class="card"><h2>People Connected to Today’s Story</h2><div class="list">{% for p in support_people %}<a class="row" href="/person/{{ p['id'] }}"><div><b>{{ p['name'] }}</b><span>{{ p['job'] }} · {{ p['home'] }}</span><small>Goal: {{ p['life_goal'] }}</small></div><div class="pill">Happiness {{ p['happiness'] }}</div></a>{% endfor %}</div></section>{% endif %}
+{% if recent_stories %}<section class="card"><h2>Recent Chapters</h2><div class="list">{% for s in recent_stories %}<a class="row" href="/serial/{{ s['day'] }}"><div><b>Day {{ s['day'] }} | {{ s['title'] }}</b><span>{{ s['theme'] }} · {{ s['protagonist_name'] or 'M6 Town' }}</span></div><div class="pill">Read</div></a>{% endfor %}</div></section>{% endif %}
+{% else %}
+<section class="card serial-hero"><h1>No story yet</h1><p>Advance one day and V7 will turn the simulation results into a serial chapter.</p><form method="post" action="/simulate-day"><button>Advance Day 1 and Generate Story</button></form></section>
+{% endif %}
+{% endblock %}

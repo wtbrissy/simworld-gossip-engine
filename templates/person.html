@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="card hero">
+  <div>
+    <div class="muted">Resident Profile</div>
+    <h1>{{ person['name'] }}</h1>
+    <p>{{ person['age'] }} · {{ person['job'] }} · {{ person['home'] }}</p>
+    <p>{{ person['personality'] }}</p>
+  </div>
+  <div class="grid two compact-stats">
+    <div class="stat mini"><span>Story Score</span><b>{{ story_score }}</b></div>
+    <div class="stat mini"><span>Secret</span><b>{{ person['secret_status'] }}</b></div>
+    <div class="stat mini"><span>Happiness</span><b>{{ person['happiness'] }}</b></div>
+    <div class="stat mini"><span>Health</span><b>{{ person['health'] }}</b></div>
+  </div>
+</section>
+<section class="card"><h2>Core Arc</h2><p><b>Goal:</b> {{ person['life_goal'] }}</p><p><b>Dramatic need:</b> {{ person['dramatic_need'] }}</p><p><b>Story arc:</b> {{ person['story_arc'] }}</p><p><b>Secret:</b> {{ person['secret'] }}</p><pre class="notable">{{ person['memory_summary'] }}</pre></section>
+<section class="card"><h2>Dialogue / Inner Monologue</h2><div class="timeline">{% for c in conversations %}<div class="event"><b>Day {{ c['day'] }} · {{ c['title'] }}</b><pre class="notable small-pre">{{ c['text'] }}</pre><span>{% if c['partner_name'] %}Related: {{ c['partner_name'] }} · {% endif %}{% if c['ai_generated'] %}local AI{% else %}rule-generated{% endif %}</span></div>{% else %}<p>No writing material yet for this resident.</p>{% endfor %}</div></section>
+<section class="card"><h2>Scene Cards</h2><div class="timeline">{% for s in scenes %}<div class="event"><b>Day {{ s['day'] }} · {{ s['title'] }}</b><p>{{ s['summary'] }}</p><span>{{ s['emotional_turn'] }} · importance {{ s['importance'] }}</span></div>{% endfor %}</div></section>
+<section class="card"><h2>Relationship Web</h2><div class="list">{% for r in relationships %}<div class="row no-link"><div><b>{{ r['other_name'] }}</b><span>{{ r['relation_type'] }} · {{ r['history'] }}</span></div><div class="metrics"><span>score {{ r['score'] }}</span><span>trust {{ r['trust'] }}</span><span>attraction {{ r['attraction'] }}</span><span>resentment {{ r['resentment'] }}</span></div></div>{% endfor %}</div></section>
+<section class="card"><h2>Personal Events</h2><div class="timeline">{% for e in events %}<div class="event"><b>Day {{ e['day'] }} · {{ e['hour'] }}:00 · {{ e['title'] }}</b><p>{{ e['description'] }}</p><span>importance {{ e['importance'] }}</span></div>{% endfor %}</div></section>
+<section class="card"><h2>Memories</h2><div class="timeline">{% for m in memories %}<div class="event"><b>Day {{ m['day'] }} · {{ m['memory_type'] }}</b><p>{{ m['text'] }}</p><span>importance {{ m['importance'] }}</span></div>{% endfor %}</div></section>
+{% endblock %}

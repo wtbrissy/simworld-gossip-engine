@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="card">
+  <h1>Residents</h1>
+  <form class="search" method="get" action="/people">
+    <input name="q" value="{{ q }}" placeholder="Search name, job, home, goal, or secret">
+    <button>Search</button>
+  </form>
+  <div class="list">
+    {% for p in people %}
+    <a class="row" href="/person/{{ p['id'] }}">
+      <div>
+        <b>{{ p['name'] }}</b>
+        <span>{{ p['age'] }} · {{ p['job'] }} · {{ p['home'] }}</span>
+        <small>Goal: {{ p['life_goal'] }}</small>
+        <small>Secret: {{ p['secret_status'] }}</small>
+      </div>
+      <div class="pill">H {{ p['happiness'] }} / HP {{ p['health'] }}</div>
+    </a>
+    {% endfor %}
+  </div>
+</section>
+{% endblock %}

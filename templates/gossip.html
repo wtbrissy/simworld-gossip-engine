@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="hero card">
+  <div>
+    <div class="muted">Town Gossip Dashboard</div>
+    <h1>Day {{ day }}: who is falling apart today?</h1>
+    <p>This is gossip mode, not literary mode. Watch secrets reveal, residents try to leave, health crises trigger, and relationships explode.</p>
+  </div>
+  <div class="actions">
+    <form method="post" action="/simulate-day"><button>Advance 1 Day</button></form>
+    <form method="post" action="/simulate-days?days=7"><button class="secondary">Advance 7 Days</button></form>
+    <form method="post" action="/gossip/generate"><button class="secondary">Refresh Gossip</button></form>
+    <a class="button ghost" href="/share">Share Card</a>
+  </div>
+</section>
+
+{% if latest %}
+<section class="card gossip-main">
+  <div class="muted">Top Headline</div>
+  <h2>{{ latest['headline'] }}</h2>
+  <p class="summary">{{ latest['town_mood'] }}</p>
+</section>
+<section class="grid two">
+  <div class="card"><h2>Hot Topics</h2><pre class="notable">{{ latest['hot_topics'] }}</pre></div>
+  <div class="card"><h2>Secret Radar</h2><pre class="notable">{{ latest['secret_watch'] }}</pre></div>
+</section>
+<section class="grid two">
+  <div class="card"><h2>Most at Risk</h2><pre class="notable">{{ latest['danger_people'] }}</pre></div>
+  <div class="card"><h2>Runaway Watch</h2><pre class="notable">{{ latest['runaway_watch'] }}</pre></div>
+</section>
+<section class="card"><h2>Relationship Bombs</h2><pre class="notable">{{ latest['relationship_bombs'] }}</pre></section>
+{% else %}
+<section class="card"><h2>No gossip report yet</h2><p>Advance one day and the system will generate the first town gossip report.</p></section>
+{% endif %}
+
+<section class="card">
+  <h2>Protagonist / Drama Source Ranking</h2>
+  <div class="list">
+    {% for p in protagonists %}
+    <a class="row" href="/person/{{ p['id'] }}">
+      <div><b>{{ p['name'] }}</b><span>{{ p['job'] }} · {{ p['home'] }}</span><small>Goal: {{ p['life_goal'] }}</small><small>Secret: {{ p['secret_status'] }} | {{ p['story_reason'] }}</small></div>
+      <div class="pill">{{ p['story_score'] }}</div>
+    </a>
+    {% endfor %}
+  </div>
+</section>
+
+<section class="card">
+  <h2>Past Gossip Reports</h2>
+  <div class="timeline">
+    {% for r in reports %}
+    <div class="event"><b>Day {{ r['day'] }} | {{ r['headline'] }}</b><p>{{ r['town_mood'] }}</p><pre class="notable small-pre">{{ r['hot_topics'] }}</pre></div>
+    {% endfor %}
+  </div>
+</section>
+{% endblock %}

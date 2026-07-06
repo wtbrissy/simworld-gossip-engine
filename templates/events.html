@@ -1,0 +1,4 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="card"><h1>Event Log{% if day_filter is not none %} · Day {{ day_filter }}{% endif %}</h1><form class="search" method="get" action="/events"><input name="day" value="{{ day_filter or '' }}" placeholder="Enter a day, e.g. 30"><button>View Day</button></form><div class="timeline">{% for e in events %}<div class="event"><b>Day {{ e['day'] }} · {{ e['hour'] }}:00 · {{ e['title'] }}</b><p>{{ e['description'] }}</p><span>importance {{ e['importance'] }}</span></div>{% endfor %}</div></section>
+{% endblock %}

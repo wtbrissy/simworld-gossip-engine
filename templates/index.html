@@ -1,0 +1,107 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="hero card">
+  <div>
+    <div class="muted">Current World</div>
+    <h1>Day {{ day }}</h1>
+    <p>{{ people_count }} residents are living, working, hiding secrets, damaging relationships, trying to leave town, and occasionally falling apart. This English demo keeps the gossip engine, secret reveals, health crises, runaway signals, and share-card mode.</p>
+    <p class="tiny">Auto-run: {% if auto_enabled %}enabled, one day every {{ auto_interval_minutes }} minutes{% else %}disabled{% endif %}</p>
+  </div>
+  <div class="actions">
+    <form method="post" action="/simulate-day"><button>Advance 1 Day</button></form>
+    <form method="post" action="/simulate-days?days=7"><button class="secondary">Advance 7 Days</button></form>
+    <form method="post" action="/simulate-days?days=30"><button class="secondary">Advance 30 Days</button></form>
+    <a class="button ghost" href="/gossip">Town Gossip</a>
+    <a class="button ghost" href="/share">Share Card</a>
+    <a class="button ghost" href="/today">Today’s Story</a>
+    <a class="button ghost" href="/serial">Serial Index</a>
+  </div>
+</section>
+
+{% if latest_gossip %}
+<section class="card gossip-feature">
+  <div class="muted">Latest Gossip</div>
+  <h2>Day {{ latest_gossip['day'] }} | {{ latest_gossip['headline'] }}</h2>
+  <p class="summary">{{ latest_gossip['town_mood'] }}</p>
+  <pre class="notable">{{ latest_gossip['hot_topics'] }}</pre>
+  <a class="button ghost compact" href="/gossip">Open Gossip Dashboard</a>
+</section>
+{% endif %}
+
+{% if latest_story %}
+<section class="card serial-feature">
+  <div class="muted">Latest Serial Chapter</div>
+  <h2>Day {{ latest_story['day'] }} | {{ latest_story['title'] }}</h2>
+  <p>{{ latest_story['subtitle'] }}</p>
+  <p class="summary">{{ latest_story['story_text'][:260] }}{% if latest_story['story_text']|length > 260 %}...{% endif %}</p>
+  <div class="actions inline-actions">
+    <a class="button" href="/today">Read Today</a>
+    <a class="button ghost" href="/serial">Chapter Index</a>
+  </div>
+</section>
+{% else %}
+<section class="card serial-feature">
+  <div class="muted">Auto Serial</div>
+  <h2>No story yet</h2>
+  <p>Advance one day and the system will turn the world events into a daily chapter.</p>
+  <form method="post" action="/simulate-day"><button>Start Day 1</button></form>
+</section>
+{% endif %}
+
+<section class="grid four">
+  <div class="card stat"><span>Happiness</span><b>{{ '%.1f'|format(avg['happiness'] or 0) }}</b></div>
+  <div class="card stat"><span>Energy</span><b>{{ '%.1f'|format(avg['energy'] or 0) }}</b></div>
+  <div class="card stat"><span>Health</span><b>{{ '%.1f'|format(avg['health'] or 0) }}</b></div>
+  <div class="card stat"><span>Wealth</span><b>{{ '%.1f'|format(avg['wealth'] or 0) }}</b></div>
+</section>
+
+{% if snapshots %}
+<section class="card">
+  <h2>14-Day Happiness Trend</h2>
+  <div class="bars">
+    {% for s in snapshots %}
+      <a class="bar-col" href="/events?day={{ s['day'] }}" title="Day {{ s['day'] }}">
+        <span class="bar" style="height: {{ s['avg_happiness'] }}%"></span>
+        <small>D{{ s['day'] }}</small>
+      </a>
+    {% endfor %}
+  </div>
+  <p class="tiny">Bar height shows average happiness. Tap a day to inspect events.</p>
+</section>
+{% endif %}
+
+{% if director %}
+<section class="card director-card">
+  <h2>AI Director Note</h2>
+  <p class="summary">{{ director['diagnosis'] }}</p>
+  <pre class="notable">{{ director['tomorrow_hooks'] }}</pre>
+  <a class="button ghost compact" href="/director">Open Director Room</a>
+</section>
+{% endif %}
+
+{% if chapter %}
+<section class="card">
+  <h2>Latest Chapter Outline: Day {{ chapter['day'] }} | {{ chapter['title'] }}</h2>
+  <p class="pill inline-pill">Theme: {{ chapter['theme'] }}</p>
+  <pre class="notable">{{ chapter['outline'] }}</pre>
+</section>
+{% endif %}
+
+<section class="card">
+  <h2>People to Watch</h2>
+  <div class="list">
+    {% for p in protagonists %}
+    <a class="row" href="/person/{{ p['id'] }}">
+      <div><b>{{ p['name'] }}</b><span>{{ p['job'] }} · {{ p['home'] }}</span><small>Goal: {{ p['life_goal'] }}</small><small>{{ p['story_reason'] }}</small></div>
+      <div class="pill">{{ p['story_score'] }}</div>
+    </a>
+    {% endfor %}
+  </div>
+</section>
+
+<section class="card danger-zone">
+  <h2>Reset World</h2>
+  <p>This wipes the current simulation and starts again with a clean English demo seed.</p>
+  <form method="post" action="/reset"><button class="danger">Reset</button></form>
+</section>
+{% endblock %}

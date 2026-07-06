@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{{ title or 'SimWorld Gossip Engine v7 English Demo' }}</title>
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="/">SimWorld <span>v7 English Demo</span></a>
+    <nav>
+      <a href="/">Home</a>
+      <a href="/people">Residents</a>
+      <a href="/gossip">Gossip</a>
+      <a href="/share">Share Card</a>
+      <a href="/today">Today</a>
+      <a href="/serial">Serial</a>
+      <a href="/storylines">Story</a>
+      <a href="/director">Director</a>
+      <a href="/writer">Writer</a>
+      <a href="/events">Events</a>
+      <a href="/settings">Settings</a>
+    </nav>
+  </header>
+  <main class="container">
+    {% block content %}{% endblock %}
+  </main>
+</body>
+</html>

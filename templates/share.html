@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="hero card">
+  <div>
+    <div class="muted">V7 Share Mode</div>
+    <h1>Town Share Card</h1>
+    <p>A clean English card for screenshots, README demos, Reddit posts, or sharing with friends.</p>
+  </div>
+  <div class="actions">
+    <form method="post" action="/simulate-days?days=7"><button>Advance 7 Days</button></form>
+    <a class="button secondary" href="/gossip">Back to Gossip</a>
+    <a class="button ghost" href="/export/share-card">Export Markdown</a>
+  </div>
+</section>
+<section class="share-card-wrap">
+  <div class="share-card">
+    <div class="share-kicker">SimWorld Gossip Engine</div>
+    <h1>Day {{ day }} Town Hot List</h1>
+    {% if latest %}<h2>{{ latest['headline'] }}</h2><p class="share-mood">{{ latest['town_mood'] }}</p>{% else %}<h2>No gossip report yet</h2><p class="share-mood">Advance one day to generate hot topics.</p>{% endif %}
+    <div class="share-stats">
+      <div><b>{{ counts['suspected'] }}</b><span>suspected secrets</span></div>
+      <div><b>{{ counts['revealed'] }}</b><span>revealed secrets</span></div>
+      <div><b>{{ counts['low_health'] }}</b><span>health risk</span></div>
+      <div><b>{{ counts['low_happiness'] }}</b><span>happiness crash</span></div>
+    </div>
+    <div class="share-section"><h3>Hot Topics</h3><ol>{% for line in hot_lines[:5] %}<li>{{ line }}</li>{% endfor %}{% if not hot_lines %}<li>No obvious hot topic yet. Advance one day.</li>{% endif %}</ol></div>
+    <div class="share-section"><h3>Drama Source Ranking</h3><ol>{% for p in top[:5] %}<li><b>{{ p['name'] }}</b> | {{ p['story_score'] }} | {{ p['life_goal'] }} | {{ p['secret_status'] }}</li>{% endfor %}</ol></div>
+    <div class="share-footer">A tiny AI fishbowl: open your phone and see who is falling apart today.</div>
+  </div>
+</section>
+<section class="card"><h2>Copyable Text</h2><textarea class="share-text" readonly>{{ share_text }}</textarea><p class="tiny">On mobile, long-press to copy; on desktop, screenshot the share card above.</p></section>
+{% endblock %}

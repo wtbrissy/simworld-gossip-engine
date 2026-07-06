@@ -1,0 +1,11 @@
+__pycache__/
+*.pyc
+.venv/
+venv/
+.env
+simworld.db
+simworld.db-*
+exports/*
+!exports/.gitkeep
+.DS_Store
+Thumbs.db
