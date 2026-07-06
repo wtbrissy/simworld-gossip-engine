@@ -2,70 +2,131 @@
 
 > A tiny AI fishbowl: open your phone and see who is falling apart today.
 
-SimWorld Gossip Engine is a lightweight local town simulation where 100 virtual residents live day by day, form relationships, hide secrets, trigger drama, suffer health crises, attempt to leave town, and generate daily gossip reports.
+![Python](https://img.shields.io/badge/Python-3.10%2B-blue)
+![FastAPI](https://img.shields.io/badge/FastAPI-local%20web%20app-green)
+![SQLite](https://img.shields.io/badge/SQLite-local%20database-lightgrey)
+![Ollama](https://img.shields.io/badge/Ollama-optional-purple)
+![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)
+![Status](https://img.shields.io/badge/status-experimental-orange)
 
-It is **not** a serious social simulation and not a pure AI novel generator. It is a local-first storytelling toy: rules simulate life, memory preserves consequences, and optional local AI turns signals into language.
-
-![SimWorld share card demo](docs/screenshots/share-card-demo.png)
-
-## Why this exists
+SimWorld Gossip Engine is a lightweight local town simulation where 100 virtual residents live, form relationships, hide secrets, trigger drama, and generate daily gossip reports.
 
 Most AI writing starts with a prompt.
 
 This starts with a town.
 
-Instead of asking an LLM to invent a story from nothing, SimWorld runs a small structured world first. Residents accumulate stress, secrets, goals, memories, relationship tension, and consequences. The gossip layer then surfaces who is becoming interesting.
+The system does **not** run 100 large language model agents in real time. Instead, it uses structured resident data, rule-based simulation, long-term memory, relationship dynamics, and optional local AI writing through Ollama.
 
-The fun is not controlling the town.
+The result is a strange little AI fishbowl: a simulated town that slowly produces secrets, conflicts, health crises, runaway attempts, public arguments, and daily gossip.
 
-The fun is checking the daily dashboard and discovering who has ruined their life today.
+## Demo
+
+![SimWorld Gossip Engine Demo](docs/screenshots/demo.gif)
+
+## What It Does
+
+SimWorld creates a small fictional town with residents who have:
+
+- names, ages, jobs, and homes
+- goals and hidden secrets
+- health, happiness, stress, wealth, and energy
+- relationships with trust, resentment, attraction, dependency, and jealousy
+- long-term memories
+- story scores that determine who is becoming narratively important
+
+Each simulated day, the town advances.
+
+People get tired. Relationships change. Secrets move from `hidden` to `suspected` to `revealed`. Some residents try to leave town. Some fall into crisis. Some become unexpectedly central to the story.
+
+Then the system turns those signals into readable town gossip.
+
+## Core Idea
+
+This project is not trying to simulate human society perfectly.
+
+It is designed to answer a much less serious question:
+
+> What if you could check a local AI town every day and see who is emotionally collapsing?
+
+The simulation layer creates structure.
+
+The memory layer creates consequence.
+
+The gossip layer makes it fun.
+
+Optional local AI makes it more readable.
 
 ## Features
 
 - 100 simulated residents
-- Goals, secrets, stress, health, happiness, wealth, energy
-- Dynamic relationships: trust, attraction, jealousy, dependency, resentment
-- Long-term memory summaries
-- Story score ranking
-- Daily simulation loop
-- Mobile-friendly web UI
-- Daily gossip dashboard: `/gossip`
-- Share card page: `/share`
+- Daily world advancement
+- Mobile-friendly local web interface
+- Character ranking and story score system
+- Daily gossip dashboard
 - Secret radar: `hidden → suspected → revealed`
 - Health crisis events
 - Runaway signals
-- Public argument events
-- Serial story export
-- Optional local AI writing via Ollama
+- Public conflict events
+- Relationship tension tracking
+- Serial story generation
+- Share card page for screenshots
+- Optional Ollama integration
+- Runs locally on a normal Windows machine
 
-## Demo concept
+## Pages
 
-A typical generated gossip day might look like this:
+After starting the app, open:
 
-```text
-Top Gossip
-#1 Mia Lee is still trying to repair her family while hiding debt.
-#2 Luna Zhang's old secret is no longer fully hidden.
-#3 Nora Zhang may be preparing to leave town.
-#4 Lucas Wilson has a suspiciously emotional secret.
-#5 The town trust index is collapsing again.
+```txt
+http://127.0.0.1:8000
 ```
 
-This is the core loop:
+Main pages:
 
-```text
-simulate town → score drama → generate gossip → read on phone → repeat
+```txt
+/          Home dashboard
+/residents Residents
+/today     Daily story
+/serial    Serial archive
+/story     Story candidates
+/director  Director view
+/writer    Writing material
+/gossip    Gossip dashboard
+/share     Share card
 ```
 
-## Quick Start on Windows
+On your phone, use your computer’s local IP address, for example:
 
-Install dependencies:
+```txt
+http://192.168.1.23:8000/gossip
+```
+
+Your phone and computer must be on the same Wi-Fi network.
+
+## Quick Start
+
+### 1. Clone the repo
+
+```bash
+git clone https://github.com/wtbrissy/simworld-gossip-engine.git
+cd simworld-gossip-engine
+```
+
+### 2. Install dependencies
+
+On Windows, you can run:
 
 ```bat
 install_windows.bat
 ```
 
-Run without AI:
+Or manually:
+
+```bash
+pip install -r requirements.txt
+```
+
+### 3. Start the local web app
 
 ```bat
 run_windows.bat
@@ -73,110 +134,139 @@ run_windows.bat
 
 Then open:
 
-```text
+```txt
 http://127.0.0.1:8000
 ```
 
-On your phone, connect to the same Wi-Fi and open:
+## Optional: Use Ollama
 
-```text
-http://YOUR_PC_IP:8000/gossip
+The app works without Ollama.
+
+Without Ollama, the simulation still runs and generates rule-based gossip. With Ollama, the daily stories, dialogue, and inner monologues become more natural.
+
+Install Ollama, then pull a small local model:
+
+```bash
+ollama pull qwen2.5:3b
 ```
 
-## Optional Ollama
-
-Install Ollama and pull a small model:
-
-```bat
-ollama run qwen2.5:3b
-```
-
-Then start the app with:
+Then run:
 
 ```bat
 run_with_ai_ollama.bat
 ```
 
-The simulation works without Ollama. Ollama only improves the writing layer.
+Recommended models for a normal mini PC:
 
-## Main Pages
-
-| Page | Purpose |
-|---|---|
-| `/` | Simulation dashboard |
-| `/people` | Resident list |
-| `/storylines` | Protagonist candidates |
-| `/gossip` | Daily gossip dashboard |
-| `/share` | Shareable town update card |
-| `/today` | Daily story page |
-| `/serial` | Serial story archive |
-| `/writer` | Dialogue and monologue material |
-| `/director` | Narrative diagnosis |
-
-## How it works
-
-This is not 100 independent LLM agents thinking in real time.
-
-It is a lightweight layered system:
-
-```text
-structured resident data
-        ↓
-rule-based simulation
-        ↓
-relationships + memories + events
-        ↓
-story/gossip scoring
-        ↓
-optional local AI writing
-        ↓
-mobile gossip dashboard
+```txt
+qwen2.5:3b
+llama3.2:3b
 ```
 
-That makes it small enough to run on a normal mini PC.
+A 7B model may work, but will be slower on machines with limited RAM.
 
-## Project Structure
+## How It Works
 
-```text
-simworld-gossip-engine/
-├── app.py
-├── sim_engine.py
-├── db.py
-├── llm.py
-├── templates/
-├── static/
-├── docs/
-├── install_windows.bat
-├── run_windows.bat
-├── run_with_ai_ollama.bat
-├── requirements.txt
-├── README.md
-├── LICENSE
-└── .gitignore
+SimWorld is built as a hybrid system:
+
+```txt
+Structured residents
+        ↓
+Rule-based daily simulation
+        ↓
+Relationship and memory updates
+        ↓
+Story score ranking
+        ↓
+Gossip and event generation
+        ↓
+Optional local AI rewriting
 ```
 
-## Design Philosophy
+The AI does not invent everything from nothing.
 
-SimWorld is closer to a tiny narrative fishbowl than a productivity tool.
+It writes from a world that has already moved.
 
-It is designed to answer questions like:
+## Why Not 100 AI Agents?
 
-- Who is under the most pressure today?
-- Whose secret is about to be revealed?
-- Who is trying to leave town?
-- Which relationship is about to explode?
-- Which background character suddenly became the protagonist?
+Running 100 full LLM agents in real time is expensive, slow, and unnecessary for this kind of project.
+
+SimWorld uses a lighter approach:
+
+- rules simulate everyday life
+- structured data tracks consequences
+- memory creates continuity
+- story scoring identifies interesting residents
+- local AI improves the writing layer
+
+This makes the project small enough to run locally while still producing emergent drama.
+
+## Example Gossip
+
+```txt
+Today’s Town Gossip
+
+#1 Mia Lee is under pressure
+Her health is collapsing, her family repair goal is active, and her secret debt is now suspected.
+
+#2 Luna Zhang still has unfinished business
+Her old secret remains unresolved, but her long-term memory score keeps rising.
+
+#3 Nora Zhang may be preparing to leave
+Her runaway signal is increasing, but her debt is keeping her tied to town.
+
+#4 A public argument damaged trust
+Two residents argued in public after resentment passed the conflict threshold.
+
+#5 The town is not okay
+Multiple residents are showing high stress, low health, and unstable relationships.
+```
+
+## Project Philosophy
+
+This is not an AI novel generator.
+
+It is closer to a narrative terrarium.
+
+You do not directly write the plot. You let a town accumulate pressure, memory, secrets, and consequences. Then you watch the story surface.
+
+Or, more simply:
+
+> A tiny AI fishbowl where simulated people slowly ruin their lives.
+
+## Tech Stack
+
+- Python
+- FastAPI
+- SQLite
+- Jinja2
+- HTML/CSS
+- Optional Ollama local model integration
 
 ## Roadmap
 
-- [ ] Better continuity between gossip days
-- [ ] Named main-character lock mode
-- [ ] Export share card as image
-- [ ] Better mobile screenshots
-- [ ] GitHub Pages landing page
-- [ ] Configurable town size
-- [ ] More event packs: romance, workplace, school, family, debt, betrayal
+Possible future upgrades:
+
+- better secret reveal logic
+- stronger continuity between daily chapters
+- character relationship graph
+- shareable image cards
+- configurable town size
+- seeded demo towns
+- Docker support
+- richer event types
+- recurring weekly town summaries
+- export to Markdown / JSON
+- better GitHub demo screenshots
+
+## Disclaimer
+
+This is an experimental side project.
+
+It is not a scientific social simulation, not a psychological model, and not a serious agent benchmark.
+
+It is a local simulation toy for emergent storytelling, town drama, and AI-assisted gossip generation.
 
 ## License
 
-MIT
+MIT License.
